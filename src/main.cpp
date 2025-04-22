@@ -1,9 +1,16 @@
 #include <iostream>
 #include "board/Board.h"
+#include "data/DatabaseManager.h"
 
 int main() {
     Board board;
     bool whiteTurn = true;
+    DatabaseManager db("chess_game.db");
+
+    if (!db.open() || !db.setupTables()) {
+        std::cerr << "❌ Database setup failed. Exiting.\n";
+        return 1;
+    }
 
     std::string from, to;
     while (true) {
