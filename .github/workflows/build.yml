@@ -1,0 +1,34 @@
+name: Build Chess Game
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up g++
+      run: sudo apt update && sudo apt install -y g++
+
+    - name: Build project
+      run: |
+        g++ -std=c++17 \
+          src/main.cpp \
+          src/board/Board.cpp \
+          src/pieces/King.cpp \
+          src/pieces/Queen.cpp \
+          src/pieces/Rook.cpp \
+          src/pieces/Bishop.cpp \
+          src/pieces/Knight.cpp \
+          src/pieces/Pawn.cpp \
+          -o chess
+
+    - name: Run app (optional)
+      run: ./chess || true
