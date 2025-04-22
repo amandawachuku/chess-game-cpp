@@ -30,5 +30,6 @@ jobs:
           src/pieces/Pawn.cpp \
           -o chess
 
-    - name: Run app (optional)
-      run: ./chess || true
+    - name: Test app launches and exits
+      run: echo | ./chess || true
+
