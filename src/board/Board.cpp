@@ -10,6 +10,7 @@
 Board::Board() {
     grid.resize(8, std::vector<Piece*>(8, nullptr));
 
+    // White pieces
     grid[0][0] = new Rook(WHITE);
     grid[0][1] = new Knight(WHITE);
     grid[0][2] = new Bishop(WHITE);
@@ -20,6 +21,7 @@ Board::Board() {
     grid[0][7] = new Rook(WHITE);
     for (int i = 0; i < 8; ++i) grid[1][i] = new Pawn(WHITE);
 
+    // Black pieces
     grid[7][0] = new Rook(BLACK);
     grid[7][1] = new Knight(BLACK);
     grid[7][2] = new Bishop(BLACK);
@@ -30,6 +32,7 @@ Board::Board() {
     grid[7][7] = new Rook(BLACK);
     for (int i = 0; i < 8; ++i) grid[6][i] = new Pawn(BLACK);
 }
+
 
 Board::~Board() {
     for (auto& row : grid)
