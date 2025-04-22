@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build chess",
+      "type": "shell",
+      "command": "C:\\mingw-w64\\mingw64\\bin\\g++.exe",
+      "args": [
+        "-std=c++17",
+        "-mconsole",
+        "src/main.cpp",
+        "src/board/Board.cpp",
+        "-o",
+        "chess.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
