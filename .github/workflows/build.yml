@@ -22,13 +22,15 @@ jobs:
         g++ -std=c++17 \
           src/main.cpp \
           src/board/Board.cpp \
+          src/data/DatabaseManager.cpp \
           src/pieces/King.cpp \
           src/pieces/Queen.cpp \
           src/pieces/Rook.cpp \
           src/pieces/Bishop.cpp \
           src/pieces/Knight.cpp \
           src/pieces/Pawn.cpp \
-          -o chess
+          -lsqlite3 -o chess
+
 
     - name: Skip running interactive app
       run: echo "Skipping runtime for now — interactive app"
