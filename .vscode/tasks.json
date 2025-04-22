@@ -4,12 +4,17 @@
     {
       "label": "build chess",
       "type": "shell",
-      "command": "C:\\mingw-w64\\mingw64\\bin\\g++.exe",
+      "command": "g++",
       "args": [
         "-std=c++17",
-        "-mconsole",
         "src/main.cpp",
         "src/board/Board.cpp",
+        "src/pieces/King.cpp",
+        "src/pieces/Queen.cpp",
+        "src/pieces/Rook.cpp",
+        "src/pieces/Bishop.cpp",
+        "src/pieces/Knight.cpp",
+        "src/pieces/Pawn.cpp",
         "-o",
         "chess.exe"
       ],
@@ -21,3 +26,4 @@
     }
   ]
 }
+
