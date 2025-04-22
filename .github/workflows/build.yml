@@ -30,6 +30,7 @@ jobs:
           src/pieces/Pawn.cpp \
           -o chess
 
-    - name: Test app launches and exits
-      run: echo | ./chess || true
+    - name: Skip running interactive app
+      run: echo "Skipping runtime for now — interactive app"
+
 
