@@ -1,6 +1,7 @@
 // DatabaseManager.cpp
 #include "DatabaseManager.h"
 #include <iostream>
+#include <ctime>
 
 DatabaseManager::DatabaseManager(const std::string& filename)
     : db(nullptr), dbName(filename) {}
@@ -64,5 +65,29 @@ bool DatabaseManager::setupTables() {
     }
 
     std::cout << "✅ Tables ensured in database." << std::endl;
+    return true;
+}
+
+bool DatabaseManager::logMove(int game_id, int turn, const std::string& piece, const std::string& color, const std::string& from, const std::string& to) {
+    std::time_t now = std::time(nullptr);
+    std::string timestamp = std::to_string(now);
+
+    std::string sql = "INSERT INTO Moves (game_id, turn, piece, color, from_square, to_square, timestamp) VALUES (" +
+        std::to_string(game_id) + "," +
+        std::to_string(turn) + ", '" +
+        piece + "', '" +
+        color + "', '" +
+        from + "', '" +
+        to + "', '" +
+        timestamp + "');";
+
+    char* errMsg = nullptr;
+    if (sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK) {
+        std::cerr << "❌ Failed to insert move: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+        return false;
+    }
+
+    std::cout << "✅ Move logged: " << piece << " from " << from << " to " << to << std::endl;
     return true;
 }
