@@ -15,4 +15,5 @@ public:
     bool open();
     void close();
     bool setupTables();
+    bool logMove(int game_id, int turn, const std::string& piece, const std::string& color, const std::string& from, const std::string& to);
 };
