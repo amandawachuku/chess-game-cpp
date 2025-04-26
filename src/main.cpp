@@ -1,8 +1,9 @@
-#include <iostream>
 #include "board/Board.h"
 #include "data/DatabaseManager.h"
+#include <iostream>
 
 int main() {
+    Board board;
     DatabaseManager db("chess_game.db");
 
     if (!db.open() || !db.setupTables()) {
@@ -10,15 +11,29 @@ int main() {
         return 1;
     }
 
-    // 🔁 Simulate a test move log
-    int gameID = 1;
-    int turn = 1;
-    std::string piece = "Pawn";
-    std::string color = "White";
-    std::string from = "e2";
-    std::string to = "e4";
+    int currentGameID = 1;
+    int turnCounter = 1;
 
-    db.logMove(gameID, turn, piece, color, from, to);
+    while (true) {
+        board.display();
+        std::cout << "Enter move (e.g., e2 e4 or q to quit): ";
+        std::string from, to;
+        std::cin >> from;
+        if (from == "q" || from == "quit") break;
+        std::cin >> to;
+
+        if (board.movePiece(from, to)) {
+            Piece* movedPiece = board.getPieceAt(to);
+            if (movedPiece) {
+                std::string symbol = movedPiece->getSymbol();
+                std::string color = movedPiece->getColor() == WHITE ? "White" : "Black";
+                db.logMove(currentGameID, turnCounter, symbol, color, from, to);
+                turnCounter++;
+            }
+        } else {
+            std::cout << "❌ Invalid move.\n";
+        }
+    }
 
     db.close();
     return 0;
