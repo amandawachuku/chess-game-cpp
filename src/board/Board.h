@@ -17,4 +17,8 @@ public:
     bool movePiece(int x1, int y1, int x2, int y2); // move using coordinates
     bool movePiece(const std::string& from, const std::string& to); // move using algebraic notation
     Piece* getPieceAt(const std::string& pos); // helper to get piece at a position
+    bool isClearVertical(int col, int row1, int row2) const;
+    bool isClearHorizontal(int row, int col1, int col2) const;
+    bool isClearDiagonal(int x1, int y1, int x2, int y2) const;
+    
 };

@@ -29,32 +29,34 @@ void Board::setupBoard() {
             grid[r][c] = nullptr;
 
     // Black major pieces (row 8 → grid[0])
-    grid[0][0] = new Rook(BLACK);
-    grid[0][1] = new Knight(BLACK);
-    grid[0][2] = new Bishop(BLACK);
-    grid[0][3] = new Queen(BLACK);
-    grid[0][4] = new King(BLACK);
-    grid[0][5] = new Bishop(BLACK);
-    grid[0][6] = new Knight(BLACK);
-    grid[0][7] = new Rook(BLACK);
+    grid[0][0] = new Rook(BLACK, this);
+    grid[0][1] = new Knight(BLACK, this);
+    grid[0][2] = new Bishop(BLACK, this);
+    grid[0][3] = new Queen(BLACK, this);
+    grid[0][4] = new King(BLACK, this);
+    grid[0][5] = new Bishop(BLACK, this);
+    grid[0][6] = new Knight(BLACK, this);
+    grid[0][7] = new Rook(BLACK, this);
 
     // Black pawns (row 7 → grid[1])
     for (int i = 0; i < 8; ++i)
-        grid[1][i] = new Pawn(BLACK);
+        grid[1][i] = new Pawn(BLACK, this);
 
     // White pawns (row 2 → grid[6])
     for (int i = 0; i < 8; ++i)
-        grid[6][i] = new Pawn(WHITE);
+        grid[6][i] = new Pawn(WHITE, this);
 
     // White major pieces (row 1 → grid[7])
-    grid[7][0] = new Rook(WHITE);
-    grid[7][1] = new Knight(WHITE);
-    grid[7][2] = new Bishop(WHITE);
-    grid[7][3] = new Queen(WHITE);
-    grid[7][4] = new King(WHITE);
-    grid[7][5] = new Bishop(WHITE);
-    grid[7][6] = new Knight(WHITE);
-    grid[7][7] = new Rook(WHITE);
+    grid[7][0] = new Rook(WHITE, this);
+    grid[7][1] = new Knight(WHITE, this);
+    grid[7][2] = new Bishop(WHITE, this);
+    grid[7][3] = new Queen(WHITE, this);
+    grid[7][4] = new King(WHITE, this);
+    grid[7][5] = new Bishop(WHITE, this);
+    grid[7][6] = new Knight(WHITE, this);
+    grid[7][7] = new Rook(WHITE, this);
+
+
 }
 
 void Board::display() const {
@@ -110,4 +112,40 @@ Piece* Board::getPieceAt(const std::string& pos) {
         return nullptr;
 
     return grid[row][col];
+}
+
+bool Board::isClearVertical(int col, int row1, int row2) const {
+    int start = std::min(row1, row2) + 1;
+    int end = std::max(row1, row2);
+    for (int r = start; r < end; ++r) {
+        if (grid[r][col] != nullptr)
+            return false;
+    }
+    return true;
+}
+
+bool Board::isClearHorizontal(int row, int col1, int col2) const {
+    int start = std::min(col1, col2) + 1;
+    int end = std::max(col1, col2);
+    for (int c = start; c < end; ++c) {
+        if (grid[row][c] != nullptr)
+            return false;
+    }
+    return true;
+}
+
+bool Board::isClearDiagonal(int x1, int y1, int x2, int y2) const {
+    int dx = (x2 > x1) ? 1 : -1;
+    int dy = (y2 > y1) ? 1 : -1;
+
+    int r = x1 + dx;
+    int c = y1 + dy;
+
+    while (r != x2 && c != y2) {
+        if (grid[r][c] != nullptr)
+            return false;
+        r += dx;
+        c += dy;
+    }
+    return true;
 }

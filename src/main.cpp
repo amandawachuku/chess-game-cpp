@@ -35,7 +35,7 @@ int main() {
         if (board.movePiece(from, to)) {
             Piece* movedPiece = board.getPieceAt(to);
             if (movedPiece) {
-                std::string symbol = movedPiece->getSymbol();
+                std::string symbol(1, movedPiece->getSymbol());
                 std::string color = movedPiece->getColor() == WHITE ? "White" : "Black";
                 db.logMove(currentGameID, turnCounter, symbol, color, from, to);
                 turnCounter++;
