@@ -91,3 +91,47 @@ bool DatabaseManager::logMove(int game_id, int turn, const std::string& piece, c
     std::cout << "✅ Move logged: " << piece << " from " << from << " to " << to << std::endl;
     return true;
 }
+
+int DatabaseManager::startNewGame(const std::string& playerWhite, const std::string& playerBlack) {
+    if (!db) return -1;
+
+    const char* sql = "INSERT INTO Games (player_white, player_black, start_time) VALUES (?, ?, datetime('now'));";
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "❌ Failed to prepare game start insert statement.\n";
+        return -1;
+    }
+
+    sqlite3_bind_text(stmt, 1, playerWhite.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, playerBlack.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        std::cerr << "❌ Failed to insert game start record.\n";
+        sqlite3_finalize(stmt);
+        return -1;
+    }
+
+    int gameId = (int)sqlite3_last_insert_rowid(db); // 🆗 Get ID of newly inserted game
+    sqlite3_finalize(stmt);
+    return gameId;
+}
+
+
+bool DatabaseManager::endGame(int gameId, const std::string& result) {
+    if (!db) return false;
+
+    const char* sql = "UPDATE Games SET result = ?, end_time = datetime('now') WHERE id = ?;";
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "❌ Failed to prepare game end update statement.\n";
+        return false;
+    }
+
+    sqlite3_bind_text(stmt, 1, result.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 2, gameId);
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+    sqlite3_finalize(stmt);
+
+    return success;
+}

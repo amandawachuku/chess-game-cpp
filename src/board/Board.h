@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "../pieces/Piece.h"
+#include <utility> // for std::pair
 
 
 class Board {
@@ -20,5 +21,6 @@ public:
     bool isClearVertical(int col, int row1, int row2) const;
     bool isClearHorizontal(int row, int col1, int col2) const;
     bool isClearDiagonal(int x1, int y1, int x2, int y2) const;
-    
+    std::pair<std::string, std::string> generateRandomMove(Color aiColor);
+
 };

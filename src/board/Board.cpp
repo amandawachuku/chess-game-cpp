@@ -5,7 +5,9 @@
 #include "../pieces/Bishop.h"
 #include "../pieces/Queen.h"
 #include "../pieces/King.h"
-
+#include <cstdlib> // for rand
+#include <ctime>   // for time
+#include <vector>
 #include <iostream>
 #include <cctype>
 
@@ -148,4 +150,35 @@ bool Board::isClearDiagonal(int x1, int y1, int x2, int y2) const {
         c += dy;
     }
     return true;
+}
+
+std::pair<std::string, std::string> Board::generateRandomMove(Color aiColor) {
+    std::vector<std::pair<std::string, std::string>> possibleMoves;
+    for (int x1 = 0; x1 < 8; ++x1) {
+        for (int y1 = 0; y1 < 8; ++y1) {
+            Piece* piece = grid[x1][y1];
+            if (piece && piece->getColor() == aiColor) {
+                for (int x2 = 0; x2 < 8; ++x2) {
+                    for (int y2 = 0; y2 < 8; ++y2) {
+                        if (piece->isMoveValid(x1, y1, x2, y2)) {
+                            Piece* target = grid[x2][y2];
+                            if (!target || target->getColor() != aiColor) {
+                                std::string from = std::string(1, 'a' + y1) + std::to_string(8 - x1);
+                                std::string to = std::string(1, 'a' + y2) + std::to_string(8 - x2);
+                                possibleMoves.push_back({from, to});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (possibleMoves.empty()) {
+        return {"", ""}; // no moves available (e.g., checkmate/stalemate)
+    }
+
+    std::srand(std::time(nullptr));
+    int randomIndex = rand() % possibleMoves.size();
+    return possibleMoves[randomIndex];
 }
