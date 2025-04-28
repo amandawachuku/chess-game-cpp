@@ -1,6 +1,9 @@
 #include "board/Board.h"
 #include "data/DatabaseManager.h"
 #include <iostream>
+#include "ai/OpenAIClient.h"
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
 
 int main() {
     Board board;
@@ -15,6 +18,9 @@ int main() {
     int currentGameID = db.startNewGame("Player1", "Player2");
     int turnCounter = 1;
     bool whiteTurn = true;
+    std::string moveHistory = "";
+    int fullMoveNumber = 1; // full move numbers (1., 2., 3....)
+    bool moveInProgress = true; // track if white or black half-move
 
     while (true) {
         board.display();
@@ -59,17 +65,36 @@ int main() {
                 std::string color = movedPiece->getColor() == WHITE ? "White" : "Black";
                 db.logMove(currentGameID, turnCounter, symbol, color, from, to);
         
-                if (!whiteTurn) {
-                    turnCounter++; // Only increment after Black moves
+                // --- Add this for move history! ---
+                if (moveInProgress) {
+                    moveHistory += std::to_string(fullMoveNumber) + ". " + from + to + " ";
+                } else {
+                    moveHistory += from + to + " ";
+                    fullMoveNumber++;
                 }
+                moveInProgress = !moveInProgress;
+                // ----------------------------------
+        
+                turnCounter++;
                 whiteTurn = !whiteTurn;
             }
-        }
+        }        
          else {
             std::cout << "❌ Invalid move.\n";
         }
     }
 
     db.close();
+    OpenAIClient client("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"); // <-- PUT YOUR API KEY HERE
+    std::string movesForAI = moveHistory;
+    std::string analysis = client.analyzeGame(movesForAI);
+    json responseJson = json::parse(analysis);
+    std::string aiAnalysis = responseJson["choices"][0]["message"]["content"];
+
+    std::cout << "=== AI Analysis ===" << std::endl;
+    std::cout << aiAnalysis << std::endl;
+
+    std::cout << aiAnalysis << "\n";
+
     return 0;
 }
