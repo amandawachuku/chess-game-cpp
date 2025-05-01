@@ -8,8 +8,9 @@
 #include <cstdlib> // for rand
 #include <ctime>   // for time
 #include <vector>
-#include <iostream>
 #include <cctype>
+#include <iostream>
+#include "../pieces/Piece.h"
 
 
 Board::Board() {

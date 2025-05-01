@@ -1,8 +1,10 @@
 #include "board/Board.h"
 #include "data/DatabaseManager.h"
-#include <iostream>
 #include "ai/OpenAIClient.h"
+#include "reports/PDFGenerator.h"
 #include "nlohmann/json.hpp"
+#include <iostream>
+
 using json = nlohmann::json;
 
 int main() {
@@ -95,6 +97,8 @@ int main() {
     std::cout << aiAnalysis << std::endl;
 
     std::cout << aiAnalysis << "\n";
+    PDFGenerator::generatePDF("game_summary.pdf", moveHistory, aiAnalysis);
 
     return 0;
 }
+
